@@ -21,17 +21,17 @@ def running_view(arr, window, axis=-1):
         arr.strides + (arr.strides[axis],))
 
 
-
-class stacked_univariant_data():
+class segmented_univariant_data():
     '''
-    Preps a dataset for a sequential model that is expecting stacked inputs. While there is no equivalence
-    requirement between input and output length. Post-model visualization is cleaner when input_len = output_len
+    Preps what I call a "segmented" dataset because it will break a sequence into many parts if necessary
+    but each piece does not carry information to the other pieces in the model's implementation.  Examples of these
+    types of models are ARp models.  Encode-Decode models (thus the pieces themselves might have a recurring aspect) 
 
     Arguments:
         - data: numpy dataset should be in the shape [num_samples, sequence_length]
             NOTE: Must be a numpy array.
-        - input_len: number of floats passed at each timestep to a model
-        - output_len: number of floats to be predicted at each timestep
+        - input_len: number of floats passed  to a model
+        - output_len: number of floats to be predicted 
         - tau_offset: number of points skipped between end of input and start of output
 
     Attributes:
@@ -61,9 +61,9 @@ class stacked_univariant_data():
         i, o, tau = self.input_len, self.output_len, self.tau_offset
         combined_len = i + o + tau
 
-        # create the datasets by taking every i'th row (if i is input_len) so inputs don't overlap
-        data = running_view(self.data,combined_len)[:,::i]
-        time = running_view(self.time,combined_len)[::i] # time doesn't have batch dim
+        # create the datasets understanding that the inputs overlap
+        data = running_view(self.data,combined_len)
+        time = running_view(self.time,combined_len) # time doesn't have batch dim
 
         # split each row into input and output, since each row is length of the sum of the two, its just slicing
         x = data[:,:,:i]
@@ -77,18 +77,18 @@ class stacked_univariant_data():
         self.ty = time[:,(i + tau):]
 
 
-
-class stacked_multivariant_data():
+class segmented_multivariant_data():
     '''
-    Preps a dataset for a sequential model that is expecting stacked inputs. While there is no equivalence
-    requirement between input and output length. Post-model visualization is cleaner when input_len = output_len
+    Preps what I call a "segmented" dataset because it will break a sequence into many parts if necessary
+    but each piece does not carry information to the other pieces in the model's implementation.  Examples of these
+    types of models are ARp models.  Encode-Decode models (thus the pieces themselves might have a recurring aspect) 
 
     Arguments Taken:
         - data: numpy dataset should be in the shape [num_samples, sequence_length, num_channels]
             NOTE: Must be a numpy array.
-        - input_len: number of floats passed by each channel at each timestep to a model
+        - input_len: number of floats passed by each channel to a model
             NOTE: The actual input into the model will be of size (input_len * num_channels)
-        - output_len: number of floats to be predicted for each channel at each timestep.
+        - output_len: number of floats to be predicted for each channel
             Similarly, the actual output of the model will be of size (output_len * num_channels)
         - tau_offset: number of points skipped between end of input and start of output
 
@@ -109,11 +109,11 @@ class stacked_multivariant_data():
         self.tau_offset = tau_offset
         self.time = np.arange(data.shape[1])
 
-        # create stacked_univariant_data instance for each channel
+        # create segmented_univariant_data instance for each channel
         self.channel_data = []
         num_channels = data.shape[2]
         for channel in range(num_channels):
-            chan_data = stacked_univariant_data(data[:,:,channel], input_len=input_len,output_len=output_len,tau_offset = tau_offset)
+            chan_data = segmented_univariant_data(data[:,:,channel], input_len=input_len,output_len=output_len,tau_offset = tau_offset)
             self.channel_data.append(chan_data)
       
         # using the above channels, concat inputs/outputs for model along input dimension
@@ -123,19 +123,3 @@ class stacked_multivariant_data():
         # only need one time vector
         self.tx = self.channel_data[0].tx
         self.ty = self.channel_data[0].ty
-
-
-
-class stacked_data_grouping():
-    def __init__(self, data, input_len=1,output_len=1,tau_offset = 0, multivariant = False, splitting_percents = (80,10,10), standarize = True):
-        
-        if multivariant:
-            'make multivariant stacked'
-        else:
-            'univariant'
-
-        'Split the data'
-
-        'Standardize and hold on to mean/var for training, used for inference later'
-
-        'Next I want to make a data loader and call '
