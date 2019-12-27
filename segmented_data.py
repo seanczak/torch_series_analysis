@@ -21,7 +21,7 @@ def running_view(arr, window, axis=-1):
         arr.strides + (arr.strides[axis],))
 
 
-class segmented_univariant_data():
+class segmented_univariate_data():
     '''
     Preps what I call a "segmented" dataset because it will break a sequence into many parts if necessary
     but each piece does not carry information to the other pieces in the model's implementation.  Examples of these
@@ -77,7 +77,7 @@ class segmented_univariant_data():
         self.ty = time[:,(i + tau):]
 
 
-class segmented_multivariant_data():
+class segmented_multivariate_data():
     '''
     Preps what I call a "segmented" dataset because it will break a sequence into many parts if necessary
     but each piece does not carry information to the other pieces in the model's implementation.  Examples of these
@@ -109,11 +109,11 @@ class segmented_multivariant_data():
         self.tau_offset = tau_offset
         self.time = np.arange(data.shape[1])
 
-        # create segmented_univariant_data instance for each channel
+        # create segmented_univariate_data instance for each channel
         self.channel_data = []
         num_channels = data.shape[2]
         for channel in range(num_channels):
-            chan_data = segmented_univariant_data(data[:,:,channel], input_len=input_len,output_len=output_len,tau_offset = tau_offset)
+            chan_data = segmented_univariate_data(data[:,:,channel], input_len=input_len,output_len=output_len,tau_offset = tau_offset)
             self.channel_data.append(chan_data)
       
         # using the above channels, concat inputs/outputs for model along input dimension

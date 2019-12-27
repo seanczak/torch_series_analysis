@@ -22,7 +22,7 @@ def running_view(arr, window, axis=-1):
 
 
 
-class stacked_univariant_data():
+class stacked_univariate_data():
     '''
     Preps a dataset for a sequential model that is expecting stacked inputs. While there is no equivalence
     requirement between input and output length. Post-model visualization is cleaner when input_len = output_len
@@ -78,7 +78,7 @@ class stacked_univariant_data():
 
 
 
-class stacked_multivariant_data():
+class stacked_multivariate_data():
     '''
     Preps a dataset for a sequential model that is expecting stacked inputs. While there is no equivalence
     requirement between input and output length. Post-model visualization is cleaner when input_len = output_len
@@ -113,7 +113,7 @@ class stacked_multivariant_data():
         self.channel_data = []
         num_channels = data.shape[2]
         for channel in range(num_channels):
-            chan_data = stacked_univariant_data(data[:,:,channel], input_len=input_len,output_len=output_len,tau_offset = tau_offset)
+            chan_data = stacked_univariate_data(data[:,:,channel], input_len=input_len,output_len=output_len,tau_offset = tau_offset)
             self.channel_data.append(chan_data)
       
         # using the above channels, concat inputs/outputs for model along input dimension
