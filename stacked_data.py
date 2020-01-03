@@ -109,7 +109,7 @@ class stacked_multivariate_data():
         self.tau_offset = tau_offset
         self.time = np.arange(data.shape[1])
 
-        # create stacked_univariant_data instance for each channel
+        # create stacked_univariate_data instance for each channel
         self.channel_data = []
         num_channels = data.shape[2]
         for channel in range(num_channels):
@@ -137,5 +137,7 @@ class stacked_data_grouping():
         'Split the data'
 
         'Standardize and hold on to mean/var for training, used for inference later'
+
+        'note that if you were going to do some differencing, here would be the place to do it'
 
         'Next I want to make a data loader and call '
