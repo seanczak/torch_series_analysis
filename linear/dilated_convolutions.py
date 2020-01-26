@@ -1,5 +1,6 @@
 
 import torch as tr 
+from causal_conv import causal_conv_1d
 
 class Wavelet( tr.nn.Module ):
     '''
