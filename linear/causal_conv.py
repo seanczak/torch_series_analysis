@@ -9,7 +9,22 @@ def causal_conv_1d( input, kernel, bias=None, stride=1, dilation=1, groups=1, sp
     '''
     Causal Convolutions
     -------------------
+
+    Implements the canonical time-series causal convolution formula:
     
+    For q in Pout
+        output[ t, :N, q] = \sum_{p in Pin} \sum_{l\in L} input[ t - l * dilation, :N, p ] kernel[ l, p, q ]
+    
+    Here:
+        l = 0 .... L-1  -- most recent to most distant filter values
+        
+    This is the regular interpretation of a convolution in time-series 
+    and is different from torch which implements the computer-vision
+    definition of convolution as a centered (i.e. non-causal) correlation.
+        
+    Uses torch.nn.functional.conv1d under the hood.
+
+
     Parameters
     ----------
     input:
@@ -52,18 +67,6 @@ def causal_conv_1d( input, kernel, bias=None, stride=1, dilation=1, groups=1, sp
                                T x N x Pin x Pout (if special=True)
     
 
-    Implements Formula:
-    ------------------
-    For q in Pout
-        output[ t, :N, q] = \sum_{p in Pin} \sum_{l\in L} input[ t - l * dilation, :N, p ] kernel[ l, p, q ]
-    
-    Here:
-        l = 0 .... L-1  -- most recent to most distant filter values
-        This is the regular interpretation of a convolution and is different from regular torch which
-        uses correlation rather than convolution.
-        
-
-    Uses torch.nn.functional.conv1d under the hood.
     '''
     if input.ndim == 2:
         # Expand dims and set Pin = 1
