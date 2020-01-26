@@ -84,8 +84,7 @@ class ARMA( tr.nn.Module ):
             self.ma_weights.append( Bq )
             self.register_parameter( f'B_{q}', Bq )
         self.dropout = tr.nn.Dropout( p=dropout ) if dropout is not None else lambda x: x
-        # default iniitialization
-        self.reset_parameters()
+
     
     def expected_num_outputs( self, X ):
         return X.shape[-1] if self.style in (ARMA.mass_univariate, ARMA.univariate) else self.num_outputs
