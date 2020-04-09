@@ -1,6 +1,6 @@
 ---
 title: readme
-layout: template
+theme: jekyll-theme-hacker
 filename: README.md
 --- 
 
