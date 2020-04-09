@@ -1,5 +1,14 @@
 theme: jekyll-theme-hacker
 
+# Name of your site (displayed in the header)
+name: Torch
+
+# Short bio or description (displayed in the header)
+description:  at Forward | UCLA CS '19
+
+# URL of your avatar or profile pic (you could use your GitHub profile pic)
+avatar: "/images/uclagradpic.jpg"
+
 
 # Includes an icon in the footer for each username you enter
 footer-links:
