@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
 
+# https://stackoverflow.com/questions/7427101/simple-argparse-example-wanted-1-argument-3-results
+
 # so it looks for -f and -b flags
 
 parser = ArgumentParser(description='Description of your program')
